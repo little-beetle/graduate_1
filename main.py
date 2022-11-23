@@ -56,63 +56,70 @@ def get_info():
 
 
 def input_personal_info():
-
     global login
-    info_shop = dict()
-    name_y = dict()
+    personal_info = dict()
+    all_personal_info = dict()
     list_info = []
-    login_enter = input("Login")
+    login_enter = input("Login ")
     all_list = []
+    all_personal_info["Личная информация"] = list_info
+    all_list.append(all_personal_info)
+    list_info.append(personal_info)
     login[login_enter] = all_list
-    name_y["Личная информация"] = list_info
-    info_shop["Имя"] = input("Введите имя: ")
-    info_shop["Возраст"] = input("Введите возраст: ")
-    # info_shop["Телефон"] = input("Введите номер телефона: ")
-    # info_shop["E-mail"] = input("Введите адрес электронной почты: ")
-    # info_shop["Индекс"] = input("Введите почтовый индекс: ")
-    # info_shop["Адрес"] = input("Введите почтовый адрес (без индекса)")
-    # info_shop["Дополнительная информация"] = input("Введите дополнительную информацию: ")
-    list_info.append(info_shop)
-    all_list.append(name_y)
+    for key in login.keys():
+        if key == login_enter:
+            personal_info["Имя"] = input("Введите имя: ")
+            personal_info["Возраст"] = input("Введите возраст: ")
+            # info_shop["Телефон"] = input("Введите номер телефона: ")
+            # info_shop["E-mail"] = input("Введите адрес электронной почты: ")
+            # info_shop["Индекс"] = input("Введите почтовый индекс: ")
+            # info_shop["Адрес"] = input("Введите почтовый адрес (без индекса)")
+            # info_shop["Дополнительная информация"] = input("Введите дополнительную информацию: ")
+            for k, v in login.items():
+
+                for i in v[0].keys():
+                    if i == "Личная информация":
+                        login[login_enter] = all_list
     return login
 
 
 
 def input_businessman_info():
+
     global login
-    info_shop = dict()
-    name_y = dict()
+    businessman_info = dict()
+    all_info_businessman = dict()
     list_info = []
-    login_enter = input("Login")
     all_list = []
-    for i in login.keys():
-        if i == login_enter:
+    login_enter = input("Login")
 
-            try:
-                for j in login[i][0].keys():
-                    if j != "Информация о предпренимателе":
-                        print("YES")
-                        all_list.append(login[i])
-            except:
-                for j in login[i][0][0].keys():
-                    print(login[i][0][0])
-                    print(type(login[i][0][0]))
-                    if j != "Информация о предпренимателе":
-                        print("YES")
-                        all_list.append(login[i])
+    all_info_businessman["Информация о предпренимателе"] = list_info
+
+    print(len(login[login_enter]))
+    personal_info = login[login_enter][0]
+    print("++++++++++++", personal_info, type(personal_info))
     login[login_enter] = all_list
-    name_y["Информация о предпренимателе"] = list_info
-    info_shop["ОГРНИП"] = input("Введите ОГРНИП: ") #print("ОГРНИП должен содержать 15 цифр")
-    info_shop["ИНН"] = input("Введите ИНН")
-    # info_shop["Р/с"] = input("Введите расчетный счет: ")
-    # info_shop["Банк"] = input("Введите название банка: ")
-    # info_shop["БИК"] = input("Введите БИК")
-    # info_shop["К/с"] = input("Введите корреспондентский счет:")
+    for key in login.keys():
+        print(key)
+        if key == login_enter:
+            print(1)
+            businessman_info["ОГРНИП"] = input("Введите ОГРНИП: ")  # print("ОГРНИП должен содержать 15 цифр")
+            businessman_info["ИНН"] = input("Введите ИНН")
+            # info_shop["Р/с"] = input("Введите расчетный счет: ")
+            # info_shop["Банк"] = input("Введите название банка: ")
+            # info_shop["БИК"] = input("Введите БИК")
+            # info_shop["К/с"] = input("Введите корреспондентский счет:")
+            list_info.append(businessman_info)
+            all_list.append(all_info_businessman)
+            for k, v in login.items():
+                for i in v[0].keys():
+                    print(i)
+                    print(3)
+                    if i == "Информация о предпренимателе":
+                        all_list.insert(0, personal_info)
+                        return login
 
 
-    list_info.append(info_shop)
-    all_list.append(name_y)
-    return login
 
 
 def get_personal_info():
@@ -135,7 +142,11 @@ def play():
 
 login = dict()
 name = dict()
-print(input_personal_info())
-print(input_businessman_info())
-print(input_businessman_info())
+
+input_personal_info()
+input_businessman_info()
+input_businessman_info()
+print("________")
+for d in login.items():
+    print(d)
 #print(play())
