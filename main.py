@@ -1,21 +1,15 @@
+from input_validation import *
 def title():
     return "Приложение MyProfile\n" \
            "Сохраняй информацию о себе и выводи ее в разных форматах"
 
 
-def correct_input():
-    print("Введите номер пункта меню:", end=" ")
-    num = input()
-    if num.isnumeric():
-        if int(num) <= 2:
-            return int(num)
-    print("Ошибка!!!")
-    return correct_input()
 
 
 
 def menu():
-    print("{one}\n{two}\n{zero}".format(
+    print("-"*60)
+    print("{one}\n{two}\n{zero}\n".format(
         one = "1 - Ввести или обновить информацию",
         two = "2 - Вывести информацию",
         zero = "0 - Завершить работу")
@@ -24,7 +18,7 @@ def menu():
     return choice
 
 
-def input_info():
+def input_info(login):
     print("\t{general_info}\n"
           "\t{businessman_info}\n"
           "\t{back}".format(
@@ -33,13 +27,14 @@ def input_info():
         back="0 - Назад"))
     choice = correct_input()
     if choice == 1:
-        pass
+        input_personal_info(login)
     elif choice == 2:
-        pass
+        input_businessman_info(login)
     else:
         return menu()
 
-def get_info():
+
+def get_info(login):
     print("\t{general_info}\n"
           "\t{all_info}\n"
           "\t{back}".format(
@@ -48,105 +43,143 @@ def get_info():
         back="0 - Назад"), end=" ")
     choice = correct_input()
     if choice == 1:
-        pass
+        print(info(login, "Личная информация"))
     elif choice == 2:
-        pass
+        print(info(login, "Вся информация"))
     else:
         return menu()
 
 
-def input_personal_info():
-    global login
+def input_personal_info(login):
+
     personal_info = dict()
     all_personal_info = dict()
     list_info = []
-    login_enter = input("Login ")
     all_list = []
+    login_enter = correct_login()
     all_personal_info["Личная информация"] = list_info
-    all_list.append(all_personal_info)
-    list_info.append(personal_info)
+
+
+    personal_info["Имя"] = correct_name()
+    personal_info["Возраст"] = correct_age()
+    personal_info["Телефон"] = correct_number_phone()
+    personal_info["E-mail"] = correct_email()
+    personal_info["Индекс"] = correct_index()
+    personal_info["Адрес"] = input("Введите почтовый адрес (без индекса)")
+    personal_info["Дополнительная информация"] = input("Введите дополнительную информацию: ")
+
+    for key in login.keys():
+        if key == login_enter:
+
+            all_list.append(all_personal_info)
+
+            for login_list in login[key]:
+                for k in login_list.keys():
+                    if k == "Информация о предпренимателе":
+                        businessman_info = login_list
+                        all_list.append(businessman_info)
+            list_info.append(personal_info)
+            login[login_enter] = all_list
+            for k, v in login.items():
+                for i in v[0].keys():
+                    if i == "Личная информация":
+                        return login
+
+
     login[login_enter] = all_list
     for key in login.keys():
         if key == login_enter:
-            personal_info["Имя"] = input("Введите имя: ")
-            personal_info["Возраст"] = input("Введите возраст: ")
-            # info_shop["Телефон"] = input("Введите номер телефона: ")
-            # info_shop["E-mail"] = input("Введите адрес электронной почты: ")
-            # info_shop["Индекс"] = input("Введите почтовый индекс: ")
-            # info_shop["Адрес"] = input("Введите почтовый адрес (без индекса)")
-            # info_shop["Дополнительная информация"] = input("Введите дополнительную информацию: ")
+
+            list_info.append(personal_info)
+            all_list.append(all_personal_info)
             for k, v in login.items():
 
                 for i in v[0].keys():
-                    if i == "Личная информация":
+                    if i == "Информация о предпренимателе":
                         login[login_enter] = all_list
+
     return login
 
 
-
-def input_businessman_info():
-
-    global login
+def input_businessman_info(login):
     businessman_info = dict()
     all_info_businessman = dict()
     list_info = []
     all_list = []
-    login_enter = input("Login")
+
+    login_enter = correct_login()
 
     all_info_businessman["Информация о предпренимателе"] = list_info
+    businessman_info["ОГРНИП"] = bank_info("Введите ОГРНИП: ") # print("ОГРНИП должен содержать 15 цифр")
+    businessman_info["ИНН"] = correct_number("Введите ИНН")
+    businessman_info["Р/с"] = bank_info_money("Введите расчетный счет: ")
+    businessman_info["Банк"] = input("Введите название банка: ")
+    businessman_info["БИК"] = correct_number("Введите БИК")
+    businessman_info["К/с"] = correct_number("Введите корреспондентский счет:")
+    for i_key in login.keys():
 
-    print(len(login[login_enter]))
-    personal_info = login[login_enter][0]
-    print("++++++++++++", personal_info, type(personal_info))
+        if i_key == login_enter:
+            personal_info = login[login_enter][0]
+            login[login_enter] = all_list
+
+            for key in login.keys():
+
+                if key == login_enter:
+                    list_info.append(businessman_info)
+                    all_list.append(all_info_businessman)
+
+                    for k, v in login.items():
+
+                        for i in v[0].keys():
+
+                            if i == "Информация о предпренимателе":
+                                all_list.insert(0, personal_info)
+                                return login
+
+
     login[login_enter] = all_list
+
     for key in login.keys():
-        print(key)
+
         if key == login_enter:
-            print(1)
-            businessman_info["ОГРНИП"] = input("Введите ОГРНИП: ")  # print("ОГРНИП должен содержать 15 цифр")
-            businessman_info["ИНН"] = input("Введите ИНН")
-            # info_shop["Р/с"] = input("Введите расчетный счет: ")
-            # info_shop["Банк"] = input("Введите название банка: ")
-            # info_shop["БИК"] = input("Введите БИК")
-            # info_shop["К/с"] = input("Введите корреспондентский счет:")
-            list_info.append(businessman_info)
+
             all_list.append(all_info_businessman)
-            for k, v in login.items():
-                for i in v[0].keys():
-                    print(i)
-                    print(3)
-                    if i == "Информация о предпренимателе":
-                        all_list.insert(0, personal_info)
-                        return login
+            list_info.append(businessman_info)
+
+            return login
 
 
+def info(login, setting):
+    login_name = correct_login()
+    for key in login.keys():
+        if login_name == key:
+            for personal_info in login[login_name]:
+                for answer in personal_info.keys():
+                    if setting == "Личная информация":
+                        if answer == setting:
+                            return personal_info[answer]
+                    elif setting == "Вся информация":
+                        return login[login_name]
 
+    else:
+        return "В базе такой информации еще нету!"
 
-def get_personal_info():
-    pass
-
-
-def get_businessman_info():
-    pass
 
 
 def play():
+    login = dict()
     print(title())
-    choice = menu()
-    if choice == 1:
-        input_info()
-    elif choice == 2:
-        get_info()
-    else:
-        return "Конец!"
+    choice = input("нажмите любую кнопку, чтобы начать!!!\n")
+    print("choice", choice)
+    while choice != 0:
+        choice = menu()
+        if choice == 1:
+            input_info(login)
+        elif choice == 2:
+            get_info(login)
+        else:
+            print(login)
+            return "Конец!"
 
-login = dict()
-name = dict()
 
-input_personal_info()
-input_businessman_info()
-input_businessman_info()
-print("________")
-for d in login.items():
-    print(d)
-#print(play())
+print(play())
